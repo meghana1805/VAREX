@@ -1,0 +1,89 @@
+# MAGPIE-Lite Configuration
+
+# Random seed for reproducibility
+seed: 42
+
+# Data paths
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  train_file: "train.csv"
+  test_file: "test.csv"
+  orthogonal_file: "orthogonal.csv"
+  acmg_file: "acmg_guided.csv"
+  denovo_file: "denovo.csv"
+  
+# Feature configuration
+features:
+  required_features:
+    - phyloP100way_vertebrate
+    - phastCons100way_vertebrate
+    - AF
+    - AF_nfe
+    - SiPhy_29way_logOdds
+    - blosum100
+    - lof_score
+    - DP_AL
+    - molecular_weight
+    - gdi
+  target: "target"  # Binary target variable (0=benign, 1=pathogenic)
+  missing_value: -999  # Sentinel value for missing data
+
+# Model parameters
+models:
+  xgb:
+    max_depth: 5
+    eta: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    objective: "binary:logistic"
+    eval_metric: "logloss"
+    n_estimators: 1000
+    early_stopping_rounds: 50
+    
+  lgb:
+    num_leaves: 31
+    learning_rate: 0.05
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    objective: "binary"
+    metric: "binary_logloss"
+    n_estimators: 1000
+    early_stopping_rounds: 50
+    
+  lr:
+    C: 1.0
+    penalty: "l2"
+    class_weight: "balanced"
+    solver: "lbfgs"
+    max_iter: 1000
+
+# Training parameters
+training:
+  n_splits: 5  # Number of CV folds for stacking
+  test_size: 0.2  # Test set size
+  random_state: 42
+  n_jobs: -1  # Use all available cores
+  
+# Output paths
+output:
+  models_dir: "artifacts/models"
+  figures_dir: "artifacts/figures"
+  reports_dir: "artifacts/reports"
+  shap_dir: "artifacts/shap"
+  
+# Evaluation metrics
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1"
+    - "roc_auc"
+    - "average_precision"
+  
+# SHAP explainer
+shap:
+  n_samples: 1000  # Number of samples to use for SHAP analysis
+  plot_type: "dot"  # or "bar" for feature importance
+  max_display: 20  # Max features to display in summary plot

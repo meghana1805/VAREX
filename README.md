@@ -84,6 +84,4 @@ MAGPIE-Lite uses a stacked ensemble approach:
 2. **Meta-learner**:
    - Logistic Regression trained on out-of-fold predictions
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
